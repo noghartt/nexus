@@ -23,10 +23,6 @@ sc = L.space
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme sc
 
--- (\ a . a) "b"
--- Var "2"
--- Var "a"
-
 pVar :: Parser Term
 pVar = do
   v <- lexeme $ some letterChar
