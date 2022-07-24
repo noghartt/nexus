@@ -15,8 +15,8 @@
       let
         projectName = "haskell-template";
 
-        overlay = final: prev: {
-          ${projectName} = final.haskellPackages.callCabal2nix projectName ./. {  };
+        overlay = final: _: with final; {
+          ${projectName} = haskellPackages.callCabal2nix projectName ./. {  };
         };
 
         overlays = [ overlay ];
@@ -25,14 +25,18 @@
       in
       rec {
         # Necessary to execute `nix build`
-        packages.${projectName} = pkgs.${projectName};
+        packages = {
+          inherit (pkgs) projectName;
+        };
 
         defaultPackage = packages.${projectName};
 
         # Necessary to execute `nix run`
-        apps.${projectName} = flake-utils.lib.mkApp { drv = packages.${projectName}; };
+        apps.${projectName} = {
+          inherit (pkgs) projectName;
+        };
 
-        defaultApp = apps.${projectName};
+        defaultApp = pkgs.${projectName};
 
         # Necesary to execute `nix develop`
         devShell = pkgs.mkShell {
