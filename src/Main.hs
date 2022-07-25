@@ -19,9 +19,15 @@ printParse x =
       fromMaybe undefined (eval Map.empty ast)
     Left err  -> VNil
 
+prettyPrint :: Value -> IO ()
+prettyPrint = \case
+  VInt v -> print v
+  VNil   -> putStrLn "Nothing here..."
+  _      -> fail "Lol"
+
 main :: IO ()
 main = do
   (p:_) <- getArgs
   handle <- openFile p ReadMode
   contents <- hGetContents handle
-  print $ printParse (pack contents)
+  prettyPrint $ printParse (pack contents)
