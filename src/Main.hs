@@ -1,5 +1,9 @@
 module Main where
 
+import System.Environment (getArgs)
+import System.IO
+import Control.Monad
+
 import Data.Map as Map
 import Data.Text (Text, unpack, pack)
 import Data.Maybe (fromMaybe)
@@ -16,4 +20,8 @@ printParse x =
     Left err  -> VNil
 
 main :: IO ()
-main = undefined
+main = do
+  (p:_) <- getArgs
+  handle <- openFile p ReadMode
+  contents <- hGetContents handle
+  print $ printParse (pack contents)
